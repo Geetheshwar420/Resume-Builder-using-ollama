@@ -106,6 +106,7 @@ async def call_ollama(prompt: str):
     Includes a 30-second hardware watchdog timeout to protect the Iris GPU
     from hanging during complex inferences. Returns an error message on timeout.
     """
+    print(f"🚀 Calling Ollama at: {OLLAMA_URL} with model: {MODEL_NAME}")
     try:
         # Strict 30s timeout for Iris GPU protection
         async with httpx.AsyncClient(timeout=30.0) as client:
@@ -163,7 +164,8 @@ async def generate_resume(request: Request, request_data: ResumeRequest, user_co
     Your task is to analyze the data and generate the resume in ONE pass.
     
     OUTPUT FORMAT (STRICT):
-    SECTION 1: A JSON list of critical missing details.
+    SECTION 1: A JSON list of critical missing details. 
+    IMPORTANT: If Name or Email are present in <raw_user_input>, DO NOT list them as missing. Only list items that are completely absent.
     ---SPLIT---
     SECTION 2: The professional resume in strict Markdown format.
     

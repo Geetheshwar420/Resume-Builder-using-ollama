@@ -80,7 +80,8 @@ class ResumePDF(FPDF):
 
 def generate_pdf(content: str) -> bytes:
     """
-    Generates an ATS-friendly PDF from professional resume markdown content.
+    Generates a formatted professional resume from markdown content.
+    Parses headers, bold text, and bullets for a clean ATS-ready layout.
     
     Args:
         content (str): The markdown or raw text content of the resume.
@@ -92,11 +93,49 @@ def generate_pdf(content: str) -> bytes:
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
     
-    # Just render the text in a clean way
-    pdf.set_font('helvetica', '', 10)
-    pdf.multi_cell(0, 6, content)
+    lines = content.split('\n')
+    for line in lines:
+        line = line.strip()
+        if not line:
+            pdf.ln(2)
+            continue
+            
+        # Header 1
+        if line.startswith('# '):
+            pdf.set_font('helvetica', 'B', 14)
+            pdf.cell(0, 10, line[2:], new_x="LMARGIN", new_y="NEXT")
+        # Header 2
+        elif line.startswith('## '):
+            pdf.set_font('helvetica', 'B', 12)
+            pdf.cell(0, 8, line[3:], new_x="LMARGIN", new_y="NEXT")
+        # Bullet
+        elif line.startswith('- ') or line.startswith('* '):
+            pdf.set_font('helvetica', '', 10)
+            pdf.cell(5) # Indent
+            # Handle bold inside bullet
+            text = line[2:]
+            if '**' in text:
+                parts = text.split('**')
+                for i, part in enumerate(parts):
+                    if i % 2 == 1: pdf.set_font('helvetica', 'B', 10)
+                    else: pdf.set_font('helvetica', '', 10)
+                    pdf.write(5, part)
+            else:
+                pdf.write(5, text)
+            pdf.ln(6)
+        # Standard Body / Bold
+        else:
+            pdf.set_font('helvetica', '', 10)
+            if '**' in line:
+                parts = line.split('**')
+                for i, part in enumerate(parts):
+                    if i % 2 == 1: pdf.set_font('helvetica', 'B', 10)
+                    else: pdf.set_font('helvetica', '', 10)
+                    pdf.write(5, part)
+            else:
+                pdf.multi_cell(0, 5, line)
+            pdf.ln(2)
     
-    # Return as bytes (fpdf2 returns bytes by default with no args)
     return bytes(pdf.output())
 
 # --- Main App ---
