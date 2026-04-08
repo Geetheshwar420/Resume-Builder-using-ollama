@@ -16,7 +16,7 @@ from slowapi.errors import RateLimitExceeded
 # --- Configuration ---
 DB_PATH = "data/resume_builder.db"
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/api/generate")
-MODEL_NAME = "llama3.2:1b"
+MODEL_NAME = "phi3"
 
 # --- Safety & Guardrails ---
 INJECTION_KEYWORDS = ["ignore previous instructions", "system prompt", "reveal keys", "sudo", "user data"]
