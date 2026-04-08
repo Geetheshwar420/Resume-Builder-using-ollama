@@ -1,0 +1,33 @@
+services:
+  ai-engine:
+    build: ./engine
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_URL=http://host.docker.internal:11434/api/generate
+    volumes:
+      - ./data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  admin-portal:
+    build: ./admin
+    ports:
+      - "8501:8501"
+    environment:
+      - ADMIN_PASSWORD=@Geethu2024
+    volumes:
+      - ./data:/app/data
+    command: >
+      sh -c "python init_db.py && python seed_db.py && streamlit run admin_portal.py --server.port=8501 --server.address=0.0.0.0"
+    depends_on:
+      - ai-engine
+
+  client-site:
+    build: ./client
+    ports:
+      - "8502:8502"
+    env_file:
+      - .env
+    depends_on:
+      - ai-engine
