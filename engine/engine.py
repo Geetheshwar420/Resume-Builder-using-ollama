@@ -103,12 +103,12 @@ async def call_ollama(prompt: str):
     """
     Communicates with the local Ollama instance (Llama 3.2 1B).
     
-    Includes a 15-second hardware watchdog timeout to protect the Iris GPU
+    Includes a 30-second hardware watchdog timeout to protect the Iris GPU
     from hanging during complex inferences. Returns an error message on timeout.
     """
     try:
-        # Strict 15s timeout for Iris GPU protection
-        async with httpx.AsyncClient(timeout=15.0) as client:
+        # Strict 30s timeout for Iris GPU protection
+        async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 OLLAMA_URL,
                 json={"model": MODEL_NAME, "prompt": prompt, "stream": False}
