@@ -6,6 +6,7 @@ services:
     environment:
       - OLLAMA_URL=http://host.docker.internal:11434/api/generate
     volumes:
+      - ./engine:/app
       - ./data:/app/data
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -17,6 +18,7 @@ services:
     environment:
       - ADMIN_PASSWORD=@Geethu2024
     volumes:
+      - ./admin:/app
       - ./data:/app/data
     command: >
       sh -c "python init_db.py && python seed_db.py && streamlit run admin_portal.py --server.port=8501 --server.address=0.0.0.0"
@@ -27,6 +29,8 @@ services:
     build: ./client
     ports:
       - "8502:8502"
+    volumes:
+      - ./client:/app
     env_file:
       - .env
     depends_on:
