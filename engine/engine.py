@@ -126,7 +126,7 @@ async def call_ollama(prompt: str):
 
 @app.post("/generate")
 @limiter.limit("10/minute")
-async def generate_resume(request_data: ResumeRequest, user_context: dict = Depends(verify_api_key)):
+async def generate_resume(request: Request, request_data: ResumeRequest, user_context: dict = Depends(verify_api_key)):
     """
     Main orchestration endpoint for resume generation.
     
