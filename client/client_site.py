@@ -63,18 +63,18 @@ st.markdown("""
 # --- PDF Generation (ATS Friendly) ---
 class ResumePDF(FPDF):
     def header(self):
-        self.set_font('Arial', 'B', 16)
-        self.cell(0, 10, 'PROFESSIONAL RESUME', ln=True, align='C')
+        self.set_font('helvetica', 'B', 16)
+        self.cell(0, 10, 'PROFESSIONAL RESUME', new_x="LMARGIN", new_y="NEXT", align='C')
         self.ln(5)
 
     def chapter_title(self, label):
-        self.set_font('Arial', 'B', 12)
-        self.cell(0, 10, label, ln=True, align='L')
+        self.set_font('helvetica', 'B', 12)
+        self.cell(0, 10, label, new_x="LMARGIN", new_y="NEXT", align='L')
         self.line(10, self.get_y(), 200, self.get_y())
         self.ln(2)
 
     def chapter_body(self, body):
-        self.set_font('Arial', '', 10)
+        self.set_font('helvetica', '', 10)
         self.multi_cell(0, 5, body)
         self.ln()
 
@@ -93,7 +93,7 @@ def generate_pdf(content: str) -> bytes:
     pdf.set_auto_page_break(auto=True, margin=15)
     
     # Just render the text in a clean way
-    pdf.set_font('Arial', '', 10)
+    pdf.set_font('helvetica', '', 10)
     pdf.multi_cell(0, 6, content)
     
     # Return as bytes (fpdf2 returns bytes by default with no args)
